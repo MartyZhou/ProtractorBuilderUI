@@ -3,17 +3,19 @@ import PropTypes from 'prop-types';
 
 import TextField from 'material-ui/TextField';
 
-class TestStep extends Component {
+import TestStep from './testStep';
+
+class TestCase extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            name: props.step.name,
-            value: props.step.value
+            name: props.testCase.name
         }
     }
 
     render() {
+        const stepElements = this.props.steps.map(s => <TestStep key={s.id} step={s} />);
         return (
             <div>
                 <TextField
@@ -21,25 +23,25 @@ class TestStep extends Component {
                     value={this.state.name}
                     onChange={event => this.setState({ name: event.target.value })}
                 />
-                <TextField
-                    label="Value"
-                    value={this.state.value}
-                    onChange={event => this.setState({ value: event.target.value })}
-                />
+                {stepElements}
             </div>
         );
     }
 }
 
 
-TestStep.propTypes = {
-    step: PropTypes.shape({
+TestCase.propTypes = {
+    steps: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string,
         value: PropTypes.string,
         name: PropTypes.string,
         action: PropTypes.number,
         locator: PropTypes.number
+    })),
+    testCase: PropTypes.shape({
+        name: PropTypes.string,
+        enabled: PropTypes.bool
     })
 };
 
-export default TestStep;
+export default TestCase;

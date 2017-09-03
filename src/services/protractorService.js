@@ -17,12 +17,14 @@ export const ProtractorService = {
         });
     },
 
-    getSuites: function () {
-        return fetch(protractor_service_url + '/suites').then(res => {
-            return res.json();
-        }).catch(err => {
+    getSuites: async function () {
+        try {
+            let res = await fetch(protractor_service_url + '/suites', { mode: 'no-cors' });
+            let resJson = await res.json();
+            return resJson;
+        } catch (err) {
             console.log(err);
-        });
+        }
     },
 
     getSuite: function (id) {
