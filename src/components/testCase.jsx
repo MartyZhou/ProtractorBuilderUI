@@ -15,7 +15,7 @@ class TestCase extends Component {
     }
 
     render() {
-        const stepElements = this.props.steps.map(s => <TestStep key={s.id} step={s} />);
+        const stepElements = this.props.testCase.steps.map(s => <TestStep key={s.id} step={s} />);
         return (
             <div>
                 <TextField
@@ -31,16 +31,16 @@ class TestCase extends Component {
 
 
 TestCase.propTypes = {
-    steps: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string,
-        value: PropTypes.string,
-        name: PropTypes.string,
-        action: PropTypes.number,
-        locator: PropTypes.number
-    })),
     testCase: PropTypes.shape({
         name: PropTypes.string,
-        enabled: PropTypes.bool
+        enabled: PropTypes.bool,
+        steps: PropTypes.arrayOf(PropTypes.shape({
+            id: PropTypes.string,
+            value: PropTypes.string,
+            name: PropTypes.string,
+            action: PropTypes.number,
+            locator: PropTypes.number
+        }))
     })
 };
 

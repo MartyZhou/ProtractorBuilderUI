@@ -24,7 +24,9 @@ class App extends Component {
   }
 
   render() {
-    const suiteElements = this.state.suites.map(s => <TestSuite key={s.id} suite={s} />);
+    const suiteElements = this.state.suites.map(s => <TestSuite key={s.id}
+      suite={s}
+      protractorService={ProtractorService} />);
     return (
       <div className="App">
         {suiteElements}
