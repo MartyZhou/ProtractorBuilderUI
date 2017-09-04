@@ -2,7 +2,7 @@ const protractor_service_url = 'http://localhost:50211/api';
 
 export const ProtractorService = {
     getActions: function () {
-        return fetch(protractor_service_url + '/basic/action').then(res => {
+        return fetch(protractor_service_url + '/basic/action', { mode: 'no-cors' }).then(res => {
             return res.json();
         }).catch(err => {
             console.log(err);
@@ -21,7 +21,11 @@ export const ProtractorService = {
         try {
             let res = await fetch(protractor_service_url + '/suites', { mode: 'no-cors' });
             let resJson = await res.json();
-            return resJson;
+            if (resJson) {
+                return resJson;
+            } else {
+                return [];
+            }
         } catch (err) {
             console.log(err);
         }
