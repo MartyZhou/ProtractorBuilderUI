@@ -37,7 +37,7 @@ class TestStep extends Component {
         this.setState({ openLocator: true, locatorAnchorEl: event.currentTarget });
     };
 
-    handleClickActionListItem = () => {
+    handleActionRequestClose = () => {
         this.setState({ openAction: false });
     };
 
