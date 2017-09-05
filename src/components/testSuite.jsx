@@ -46,7 +46,10 @@ class TestSuite extends Component {
 
     render() {
         const classes = this.props.classes;
-        const caseElements = this.props.cases.map(s => <TestCase key={s.id} testCase={s} />);
+        const caseElements = this.props.cases.map(s => <TestCase
+            key={s.id}
+            testCase={s}
+            protractorService={this.props.protractorService} />);
         return (
             <div>
                 <Typography type="title" className={classes.title}>

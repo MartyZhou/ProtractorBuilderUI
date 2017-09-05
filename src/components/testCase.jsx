@@ -31,12 +31,30 @@ class TestCase extends Component {
         }
     };
 
+    componentDidMount() {
+        this.props.protractorService.getActions().then(data => {
+            this.setState({
+                actions: data
+            })
+        });
+
+        this.props.protractorService.getLocators().then(data => {
+            this.setState({
+                locators: data
+            })
+        });
+    };
+
     handleClick = () => {
         this.setState({ open: !this.state.open });
     };
 
     render() {
-        const stepElements = this.props.testCase.steps.map(s => <TestStep key={s.id} step={s} />);
+        const stepElements = this.props.testCase.steps.map(s => <TestStep
+            key={s.id}
+            step={s}
+            actions={this.state.actions}
+            locators={this.state.locators} />);
         return (
             <div>
                 <ListItem button>
@@ -56,6 +74,10 @@ class TestCase extends Component {
 
 
 TestCase.propTypes = {
+    protractorService: PropTypes.shape({
+        getActions: PropTypes.func.isRequired,
+        getLocators: PropTypes.func.isRequired
+    }).isRequired,
     classes: PropTypes.object.isRequired,
     testCase: PropTypes.shape({
         name: PropTypes.string,
