@@ -28,7 +28,7 @@ class TestSuite extends Component {
         super(props);
 
         this.state = {
-            name: props.suite.name,
+            //name: props.suite.name,
             cases: [],
             expanded: false
         }
