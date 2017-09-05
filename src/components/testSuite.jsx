@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 
 import { withStyles } from 'material-ui/styles';
 import classnames from 'classnames';
-import TextField from 'material-ui/TextField';
-import Card, { CardHeader, CardMedia, CardContent, CardActions } from 'material-ui/Card';
+import ListSubheader from 'material-ui/List/ListSubheader';
+import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import IconButton from 'material-ui/IconButton';
 import Collapse from 'material-ui/transitions/Collapse';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
+import Typography from 'material-ui/Typography';
 
 import TestCase from './testCase';
 
@@ -28,53 +29,32 @@ class TestSuite extends Component {
         super(props);
 
         this.state = {
-            //name: props.suite.name,
             cases: [],
             expanded: false
         }
-    }
+    };
 
-    handleExpandClick = () => {
-        this.setState({ expanded: !this.state.expanded });
-        this.props.protractorService.getSuite(this.props.suite.id).then(data=>{
-            this.setState({
-                cases: data.cases
-            })
-        });
+    componentDidMount() {
+        if (this.props.suite && this.props.suite.id) {
+            this.props.protractorService.getSuite(this.props.suite.id).then(data => {
+                this.setState({
+                    cases: data.cases
+                })
+            });
+        }
     };
 
     render() {
         const classes = this.props.classes;
-        const caseElements = this.state.cases.map(s => <TestCase key={s.id} testCase={s} />);
+        const caseElements = this.props.cases.map(s => <TestCase key={s.id} testCase={s} />);
         return (
             <div>
-                <Card >
-                    <CardHeader title={this.state.name} />
-                    <CardContent>
-                        <TextField
-                            label="Name"
-                            value={this.state.name}
-                            onChange={event => this.setState({ name: event.target.value })}
-                        />
-                    </CardContent>
-                    <CardActions disableActionSpacing>
-                        <IconButton
-                            className={classnames(classes.expand, {
-                                [classes.expandOpen]: this.state.expanded,
-                            })}
-                            onClick={this.handleExpandClick}
-                            aria-expanded={this.state.expanded}
-                            aria-label="Show Cases"
-                        >
-                            <ExpandMoreIcon />
-                        </IconButton>
-                    </CardActions>
-                    <Collapse in={this.state.expanded} transitionDuration="auto" unmountOnExit>
-                        <CardContent>
-                            {caseElements}
-                        </CardContent>
-                    </Collapse>
-                </Card>
+                <Typography type="title" className={classes.title}>
+                    {this.props.suite.name}
+                </Typography>
+                <List>
+                    {caseElements}
+                </List>
             </div>
         );
     }

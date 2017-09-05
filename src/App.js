@@ -102,7 +102,9 @@ const styles = theme => ({
 
 class App extends Component {
   state = {
-    open: false
+    open: false,
+    cases: [],
+    selectedSuite: {}
   };
 
   handleDrawerOpen = () => {
@@ -111,6 +113,15 @@ class App extends Component {
 
   handleDrawerClose = () => {
     this.setState({ open: false });
+  };
+
+  handleSuiteSelected = (suite) => {
+    ProtractorService.getSuite(suite.id).then(data => {
+      this.setState({
+        cases: data.cases
+      })
+    });
+    this.setState({ selectedSuite: suite });
   };
 
   render() {
@@ -148,11 +159,11 @@ class App extends Component {
                 </IconButton>
               </div>
               <Divider />
-              <TestSuiteList protractorService={ProtractorService} />
+              <TestSuiteList protractorService={ProtractorService} onSuiteSelected={this.handleSuiteSelected} />
             </div>
           </Drawer>
           <main className={classNames(classes.content, this.state.open && classes.contentShift)}>
-            <TestSuite suite={this.state.selectedSuite} protractorService={ProtractorService}/>
+            <TestSuite suite={this.state.selectedSuite} cases={this.state.cases} protractorService={ProtractorService} />
           </main>
         </div>
       </div>

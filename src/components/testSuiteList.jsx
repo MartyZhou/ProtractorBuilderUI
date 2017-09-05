@@ -40,9 +40,15 @@ class TestSuiteList extends Component {
         });
     }
 
+    onSuiteClick = (event) => {
+        let id = event.currentTarget.id;
+        let suite = this.state.suites.find(s => s.id === id);
+        this.props.onSuiteSelected(suite);
+    };
+
     render() {
         const suiteElements = this.state.suites.map(s =>
-            <ListItem button key={s.id}>
+            <ListItem button key={s.id} id={s.id} onClick={this.onSuiteClick}>
                 <ListItemAvatar>
                     <Avatar>
                         <FolderIcon />
@@ -73,7 +79,8 @@ TestSuiteList.propTypes = {
     classes: PropTypes.object.isRequired,
     protractorService: PropTypes.shape({
         getSuites: PropTypes.func.isRequired
-    }).isRequired
+    }).isRequired,
+    onSuiteSelected: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(TestSuiteList);
