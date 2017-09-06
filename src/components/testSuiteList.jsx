@@ -57,11 +57,6 @@ class TestSuiteList extends Component {
                 <ListItemText
                     primary={s.name}
                 />
-                <ListItemSecondaryAction>
-                    <IconButton aria-label="Delete">
-                        <DeleteIcon />
-                    </IconButton>
-                </ListItemSecondaryAction>
             </ListItem>
         );
 

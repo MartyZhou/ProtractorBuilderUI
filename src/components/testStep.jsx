@@ -7,21 +7,23 @@ import List, { ListItem, ListItemText } from 'material-ui/List';
 import { withStyles } from 'material-ui/styles';
 
 const styles = theme => ({
-  root: {
-    width: '100%',
-    background: theme.palette.background.paper,
-  },
+    root: {
+        width: '100%',
+        background: theme.palette.background.paper,
+    },
 });
 
 class TestStep extends Component {
     constructor(props) {
         super(props);
 
+        let selectedAction = props.actions.find(a => a.id === props.step.actionSequence);
+        let selectedLocator = props.locators.find(l => l.id === props.step.locator);
         this.state = {
             name: props.step.name,
             value: props.step.value,
-            selectedActionId: props.step.action,
-            selectedLocatorId: props.step.locator,
+            selectedAction: selectedAction,
+            selectedLocator: selectedLocator,
             actionAnchorEl: undefined,
             locatorAnchorEl: undefined,
             openAction: false,
@@ -46,16 +48,16 @@ class TestStep extends Component {
     };
 
     handleActionClick = (event, option) => {
-        this.setState({ selectedActionId: option.id, openAction: false, selectedActionName: option.name });
+        this.setState({ selectedAction: option, openAction: false });
     };
 
     handleLocatorClick = (event, option) => {
-        this.setState({ selectedLocatorId: option.id, openLocator: false, selectedLocatorName: option.name });
+        this.setState({ selectedLocator: option, openLocator: false });
     };
 
     render() {
         return (
-            <div>
+            <div className="pb-step-row">
                 <TextField
                     label="Name"
                     value={this.state.name}
@@ -70,7 +72,7 @@ class TestStep extends Component {
                         onClick={this.handleClickActionListItem}
                     >
                         <ListItemText
-                            primary={this.state.selectedActionName}
+                            primary={this.state.selectedAction.name}
                         />
                     </ListItem>
                 </List>
@@ -83,7 +85,7 @@ class TestStep extends Component {
                     {this.props.actions.map((option, index) => (
                         <MenuItem
                             key={option.id}
-                            selected={option.id === this.state.selectedActionId}
+                            selected={option.id === this.state.selectedAction.id}
                             onClick={event => this.handleActionClick(event, option)}
                         >
                             {option.name}
@@ -99,7 +101,7 @@ class TestStep extends Component {
                         onClick={this.handleClickLocatorListItem}
                     >
                         <ListItemText
-                            primary={this.state.selectedLocatorName}
+                            primary={this.state.selectedLocator.name}
                         />
                     </ListItem>
                 </List>
@@ -112,7 +114,7 @@ class TestStep extends Component {
                     {this.props.locators.map((option, index) => (
                         <MenuItem
                             key={option.id}
-                            selected={option.id === this.state.selectedLocatorId}
+                            selected={option.id === this.state.selectedLocator.id}
                             onClick={event => this.handleLocatorClick(event, option)}
                         >
                             {option.name}
@@ -135,7 +137,7 @@ TestStep.propTypes = {
         id: PropTypes.string,
         value: PropTypes.string,
         name: PropTypes.string,
-        action: PropTypes.number,
+        actionSequence: PropTypes.number,
         locator: PropTypes.number
     }),
     actions: PropTypes.array,
