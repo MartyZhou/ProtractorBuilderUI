@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import SendIcon from 'material-ui-icons/Send';
+import AddIcon from 'material-ui-icons/Add';
+import IconButton from 'material-ui/IconButton';
 import ExpandLess from 'material-ui-icons/ExpandLess';
 import ExpandMore from 'material-ui-icons/ExpandMore';
 import Collapse from 'material-ui/transitions/Collapse';
@@ -27,7 +29,8 @@ class TestCase extends Component {
 
         this.state = {
             name: props.testCase.name,
-            open: false
+            open: false,
+            steps: props.testCase.steps
         }
     };
 
@@ -49,12 +52,32 @@ class TestCase extends Component {
         this.setState({ open: !this.state.open });
     };
 
+    handleNewStepClick = () => {
+        let step = {
+            id: this.state.steps.length,
+            actionSequence: 0,
+            locator: 0
+        };
+        this.setState(prevState => ({
+            steps: [...prevState.steps, step]
+        }))
+    };
+
+    handleStepDeleted = (deletedStep) => {
+        this.setState(prevState => ({
+            steps: prevState.steps.filter(s => s.id !== deletedStep.id)
+        }))
+    };
+
     render() {
-        const stepElements = this.props.testCase.steps.map(s => <TestStep
+        const stepElements = this.state.steps.map((s, i) => <TestStep
             key={s.id}
             step={s}
+            previousSteps={this.state.steps.slice(0, i)}
             actions={this.state.actions}
-            locators={this.state.locators} />);
+            locators={this.state.locators}
+            onStepDeleted={this.handleStepDeleted}
+        />);
         return (
             <div>
                 <ListItem button>
@@ -66,6 +89,9 @@ class TestCase extends Component {
                 </ListItem>
                 <Collapse in={this.state.open} transitionDuration="auto" unmountOnExit>
                     {stepElements}
+                    <IconButton aria-label="New Step">
+                        <AddIcon onClick={this.handleNewStepClick} />
+                    </IconButton>
                 </Collapse>
             </div>
         );

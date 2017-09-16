@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import TextField from 'material-ui/TextField';
 import Menu, { MenuItem } from 'material-ui/Menu';
+import IconButton from 'material-ui/IconButton';
+import DeleteIcon from 'material-ui-icons/Delete';
 import List, { ListItem, ListItemText } from 'material-ui/List';
 import { withStyles } from 'material-ui/styles';
 
@@ -19,15 +21,22 @@ class TestStep extends Component {
 
         let selectedAction = props.actions.find(a => a.id === props.step.actionSequence);
         let selectedLocator = props.locators.find(l => l.id === props.step.locator);
+        let selectedResultFrom;
+        if (props.step.resultFrom) {
+            selectedResultFrom = props.previousSteps.find(s => s.name === props.step.resultFrom.name);
+        }
         this.state = {
+            step: props.step,
             name: props.step.name,
             value: props.step.value,
             selectedAction: selectedAction,
             selectedLocator: selectedLocator,
+            selectedResultFrom: selectedResultFrom,
             actionAnchorEl: undefined,
             locatorAnchorEl: undefined,
             openAction: false,
-            openLocator: false
+            openLocator: false,
+            openResultFrom: false
         }
     }
 
@@ -39,6 +48,10 @@ class TestStep extends Component {
         this.setState({ openLocator: true, locatorAnchorEl: event.currentTarget });
     };
 
+    handleClickResultFromListItem = event => {
+        this.setState({ openResultFrom: true, resultFromEl: event.currentTarget });
+    };
+
     handleActionRequestClose = () => {
         this.setState({ openAction: false });
     };
@@ -47,12 +60,24 @@ class TestStep extends Component {
         this.setState({ openLocator: false });
     };
 
+    handleResultFromRequestClose = () => {
+        this.setState({ openResultFrom: false });
+    };
+
     handleActionClick = (event, option) => {
         this.setState({ selectedAction: option, openAction: false });
     };
 
     handleLocatorClick = (event, option) => {
         this.setState({ selectedLocator: option, openLocator: false });
+    };
+
+    handleResultFromClick = (event, option) => {
+        this.setState({ selectedResultFrom: option, openResultFrom: false });
+    };
+
+    handleDelete = (event) => {
+        this.props.onStepDeleted(this.state.step);
     };
 
     render() {
@@ -126,6 +151,38 @@ class TestStep extends Component {
                     value={this.state.value}
                     onChange={event => this.setState({ value: event.target.value })}
                 />
+                <List>
+                    <ListItem
+                        button
+                        aria-haspopup="true"
+                        aria-controls="result-from-menu"
+                        aria-label="ResultFrom"
+                        onClick={this.handleClickResultFromListItem}
+                    >
+                        <ListItemText
+                            primary={this.state.selectedResultFrom ? this.state.selectedResultFrom.name : ''}
+                        />
+                    </ListItem>
+                </List>
+                <Menu
+                    id="result-from-menu"
+                    anchorEl={this.state.resultFromEl}
+                    open={this.state.openResultFrom}
+                    onRequestClose={this.handleResultFromRequestClose}
+                >
+                    {this.props.previousSteps.map((option, index) => (
+                        <MenuItem
+                            key={option.name}
+                            selected={option.name === (this.state.selectedResultFrom ? this.state.selectedResultFrom.name : '')}
+                            onClick={event => this.handleResultFromClick(event, option)}
+                        >
+                            {option.name}
+                        </MenuItem>
+                    ))}
+                </Menu>
+                <IconButton aria-label="Delete">
+                    <DeleteIcon onClick={this.handleDelete} />
+                </IconButton>
             </div>
         );
     }
@@ -141,7 +198,9 @@ TestStep.propTypes = {
         locator: PropTypes.number
     }),
     actions: PropTypes.array,
-    locators: PropTypes.array
+    locators: PropTypes.array,
+    previousSteps: PropTypes.array,
+    onStepDeleted: PropTypes.func
 };
 
 export default withStyles(styles)(TestStep);
