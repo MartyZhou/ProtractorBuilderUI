@@ -68,7 +68,7 @@ class TestStep extends Component {
 
     handleActionClick = (event, option) => {
         let step = Object.assign({}, this.state.step);
-        step.locator = option.id;
+        step.actionSequence = option.id;
 
         this.setState({
             selectedAction: option,
@@ -80,7 +80,7 @@ class TestStep extends Component {
 
     handleLocatorClick = (event, option) => {
         let step = Object.assign({}, this.state.step);
-        step.actionSequence = option.id;
+        step.locator = option.id;
 
         this.setState({
             selectedLocator: option,
@@ -116,6 +116,15 @@ class TestStep extends Component {
     handleStepNameChanged = (event) => {
         let step = Object.assign({}, this.state.step);
         step.name = event.target.value;
+        this.setState({
+            step: step,
+            isChanged: true
+        });
+    };
+
+    handleStepValueChanged = (event) => {
+        let step = Object.assign({}, this.state.step);
+        step.value = event.target.value;
         this.setState({
             step: step,
             isChanged: true
@@ -190,8 +199,8 @@ class TestStep extends Component {
                 </Menu>
                 <TextField
                     label="Value"
-                    value={this.state.value ? this.state.value : ''}
-                    onChange={event => this.setState({ value: event.target.value })}
+                    value={this.state.step.value ? this.state.step.value : ''}
+                    onChange={this.handleStepValueChanged}
                 />
                 <List>
                     <ListItem
