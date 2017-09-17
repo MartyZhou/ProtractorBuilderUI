@@ -11,6 +11,7 @@ import List, {
 } from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
 import IconButton from 'material-ui/IconButton';
+import AddIcon from 'material-ui-icons/Add';
 import FolderIcon from 'material-ui-icons/Folder';
 import DeleteIcon from 'material-ui-icons/Delete';
 
@@ -46,6 +47,18 @@ class TestSuiteList extends Component {
         this.props.onSuiteSelected(suite);
     };
 
+    handleNewSuiteClick = () => {
+        let suite = {
+            id: '"' + this.state.suites.length + '"',
+            name: 'New Suite',
+            isNew: true
+        };
+
+        this.setState(prevState => ({
+            suites: [...prevState.suites, suite]
+        }));
+    };
+
     render() {
         const suiteElements = this.state.suites.map(s =>
             <ListItem button key={s.id} id={s.id} onClick={this.onSuiteClick}>
@@ -64,6 +77,9 @@ class TestSuiteList extends Component {
             <div>
                 <List>
                     {suiteElements}
+                    <IconButton aria-label="New Suite">
+                        <AddIcon onClick={this.handleNewSuiteClick} />
+                    </IconButton>
                 </List>
             </div>
         );

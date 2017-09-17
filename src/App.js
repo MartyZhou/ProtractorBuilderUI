@@ -116,11 +116,20 @@ class App extends Component {
   };
 
   handleSuiteSelected = (suite) => {
-    ProtractorService.getSuite(suite.id).then(data => {
+    if (suite.isNew) {
       this.setState({
-        cases: data.cases
-      })
-    });
+        cases: []
+      });
+    } else {
+      ProtractorService.getSuite(suite.id).then(data => {
+        if (data) {
+          this.setState({
+            cases: data.cases
+          });
+        }
+      });
+    }
+
     this.setState({ selectedSuite: suite });
   };
 

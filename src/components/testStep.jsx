@@ -5,6 +5,7 @@ import TextField from 'material-ui/TextField';
 import Menu, { MenuItem } from 'material-ui/Menu';
 import IconButton from 'material-ui/IconButton';
 import DeleteIcon from 'material-ui-icons/Delete';
+import ApplyIcon from 'material-ui-icons/Check';
 import List, { ListItem, ListItemText } from 'material-ui/List';
 import { withStyles } from 'material-ui/styles';
 
@@ -36,7 +37,8 @@ class TestStep extends Component {
             locatorAnchorEl: undefined,
             openAction: false,
             openLocator: false,
-            openResultFrom: false
+            openResultFrom: false,
+            isChanged: false
         }
     }
 
@@ -65,19 +67,59 @@ class TestStep extends Component {
     };
 
     handleActionClick = (event, option) => {
-        this.setState({ selectedAction: option, openAction: false });
+        let step = Object.assign({}, this.state.step);
+        step.locator = option.id;
+
+        this.setState({
+            selectedAction: option,
+            openAction: false,
+            step: step,
+            isChanged: true
+        });
     };
 
     handleLocatorClick = (event, option) => {
-        this.setState({ selectedLocator: option, openLocator: false });
+        let step = Object.assign({}, this.state.step);
+        step.actionSequence = option.id;
+
+        this.setState({
+            selectedLocator: option,
+            openLocator: false,
+            step: step,
+            isChanged: true
+        });
     };
 
     handleResultFromClick = (event, option) => {
-        this.setState({ selectedResultFrom: option, openResultFrom: false });
+        let step = Object.assign({}, this.state.step);
+        step.resultFrom = option;
+
+        this.setState({
+            selectedResultFrom: option,
+            openResultFrom: false,
+            step: step,
+            isChanged: true
+        });
     };
+
+    handleApply = () => {
+        this.props.onStepChanged(this.state.step);
+        this.setState({
+            isChanged: false
+        });
+    }
 
     handleDelete = (event) => {
         this.props.onStepDeleted(this.state.step);
+    };
+
+    handleStepNameChanged = (event) => {
+        let step = Object.assign({}, this.state.step);
+        step.name = event.target.value;
+        this.setState({
+            step: step,
+            isChanged: true
+        });
     };
 
     render() {
@@ -85,8 +127,8 @@ class TestStep extends Component {
             <div className="pb-step-row">
                 <TextField
                     label="Name"
-                    value={this.state.name}
-                    onChange={event => this.setState({ name: event.target.value })}
+                    value={this.state.step.name}
+                    onChange={this.handleStepNameChanged}
                 />
                 <List>
                     <ListItem
@@ -148,7 +190,7 @@ class TestStep extends Component {
                 </Menu>
                 <TextField
                     label="Value"
-                    value={this.state.value}
+                    value={this.state.value ? this.state.value : ''}
                     onChange={event => this.setState({ value: event.target.value })}
                 />
                 <List>
@@ -180,6 +222,11 @@ class TestStep extends Component {
                         </MenuItem>
                     ))}
                 </Menu>
+                {this.state.isChanged ?
+                    <IconButton aria-label="Apply">
+                        <ApplyIcon onClick={this.handleApply} />
+                    </IconButton> : <span />
+                }
                 <IconButton aria-label="Delete">
                     <DeleteIcon onClick={this.handleDelete} />
                 </IconButton>
@@ -200,7 +247,8 @@ TestStep.propTypes = {
     actions: PropTypes.array,
     locators: PropTypes.array,
     previousSteps: PropTypes.array,
-    onStepDeleted: PropTypes.func
+    onStepDeleted: PropTypes.func,
+    onStepChanged: PropTypes.func
 };
 
 export default withStyles(styles)(TestStep);

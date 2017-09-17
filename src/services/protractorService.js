@@ -1,5 +1,10 @@
 const protractor_service_url = 'http://localhost:50211/api';
 
+const headers = new Headers({
+    "Content-Type": "application/json",
+    "Accept": "application/json"
+});
+
 export const ProtractorService = {
     getActions: function () {
         return fetch(protractor_service_url + '/basic/action').then(res => {
@@ -35,15 +40,19 @@ export const ProtractorService = {
         }
     },
 
-    postSuite: function (testSuite) {
-        return fetch(protractor_service_url + '/suites', {
-            method: 'POST',
-            body: testSuite
-        }).then(res => {
-            return res.json();
-        }).catch(err => {
+    putSuite: async (testSuite) => {
+        try {
+            let request = new Request(protractor_service_url + '/suites', {
+                headers: headers,
+                method: 'PUT',
+                body: JSON.stringify(testSuite)
+            });
+
+            let res = await fetch(request);
+            return await res.json();
+        } catch (err) {
             console.log(err);
-        });
+        }
     },
 
     getCases: function () {
@@ -62,14 +71,18 @@ export const ProtractorService = {
         });
     },
 
-    postCase: function (testCase) {
-        return fetch(protractor_service_url + '/cases', {
-            method: 'POST',
-            body: testCase
-        }).then(res => {
-            return res;
-        }).catch(err => {
-            console.log(err);
+    putCase: async (testCase) => {
+        let request = new Request(protractor_service_url + '/cases', {
+            headers: headers,
+            method: 'PUT',
+            body: JSON.stringify(testCase)
         });
+
+        try {
+            let res = await fetch(request);
+            return await res.json();
+        } catch (err) {
+            console.log(err);
+        }
     }
 };
