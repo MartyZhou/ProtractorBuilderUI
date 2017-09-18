@@ -35,9 +35,11 @@ class TestSuiteList extends Component {
 
     componentDidMount() {
         this.props.protractorService.getSuites().then(data => {
-            this.setState({
-                suites: data
-            });
+            if (data) {
+                this.setState({
+                    suites: data
+                });
+            }
         });
     }
 
