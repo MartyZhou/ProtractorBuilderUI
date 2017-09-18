@@ -80,7 +80,7 @@ class TestSuite extends Component {
     handleCaseIdChanged = (caseId) => {
         if (!this.state.caseIds.includes(caseId)) {
             this.setState(preState => ({
-                caseIds: [...preState, caseId]
+                caseIds: [...preState.caseIds, caseId]
             }))
         }
     };
