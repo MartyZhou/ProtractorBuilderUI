@@ -1,4 +1,4 @@
-const protractor_service_url = 'http://localhost:50211/api';
+const protractor_service_url = 'http://localhost:5000/api';
 
 const headers = new Headers({
     "Content-Type": "application/json",
@@ -76,6 +76,21 @@ export const ProtractorService = {
             headers: headers,
             method: 'PUT',
             body: JSON.stringify(testCase)
+        });
+
+        try {
+            let res = await fetch(request);
+            return await res.json();
+        } catch (err) {
+            console.log(err);
+        }
+    },
+
+    run: async (headerless) => {
+        let request = new Request(protractor_service_url + '/protractor', {
+            headers: headers,
+            method: 'POST',
+            body: headerless
         });
 
         try {

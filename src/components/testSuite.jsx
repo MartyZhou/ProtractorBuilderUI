@@ -88,7 +88,8 @@ class TestSuite extends Component {
     handleNewCaseClick = () => {
         let testCase = {
             id: '"' + this.state.cases.length + '"',
-            steps: []
+            steps: [], 
+            order: this.state.cases.length > 0 ? this.state.cases[this.state.cases.length - 1].order + 1 : 0
         };
 
         this.setState(prevState => ({

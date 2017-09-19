@@ -69,7 +69,8 @@ class TestCase extends Component {
         let step = {
             id: '"' + this.state.steps.length + '"',
             actionSequence: 0,
-            locator: 0
+            locator: 0,
+            order: this.state.steps.length > 0 ? this.state.steps[this.state.steps.length - 1].order + 1 : 0
         };
         this.setState(prevState => ({
             steps: [...prevState.steps, step]
